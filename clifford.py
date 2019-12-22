@@ -52,10 +52,8 @@ for i in range(h):
         b = int((1. - math.exp(-sens * val * color[2])) * 255)
         im[i, j, :] = r, g, b
 
+plt.imsave('clifford.png', im, dpi=600, origin='lower')
+
 plt.axis('off')
-
 plt.imshow(im)
-
-plt.savefig('clifford.png', dpi=600.)
-
 plt.show()

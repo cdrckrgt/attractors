@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 def aizawa(x, y, z, a=0.95, b=0.7, c=0.65, d=3.5, e=0.25, f=0.1):
     x_prime = (z - b) * x - d * y
     y_prime = d * x + (z - b) * y
-    z_prime = c + a * z - (z ** 3) / 3. - x ** 2 + f * z * x ** 3
+    z_prime = c + a * z - (z ** 3) / 3. - (x ** 2 + y ** 2) * (1 + e * z) + f * z * x ** 3
     return x_prime, y_prime, z_prime
 
 # how many steps we propagate
@@ -20,11 +20,11 @@ dt = 0.01
 h, w = 1600, 1600
 hist = np.zeros((h, w), dtype=int)
 
-x_min = -3.15
-x_max = 2.9
+x_min = -2
+x_max = 2
 
-y_min = x_min * (h / w)
-y_max = x_max * (h / w)
+y_min = x_min * (h / w) + 0.6
+y_max = x_max * (h / w) + 0.4
 
 print('x_min: ', x_min)
 print('x_max: ', x_max)
@@ -53,7 +53,7 @@ for i in range(nb_iters):
         hist[y_i, x_i] += 1
 
 im = np.zeros((h, w, 3), dtype=int)
-sens = 1e-2
+sens = 3e-4
 color = (36, 169, 174)
 for i in range(h):
     for j in range(w):
@@ -63,10 +63,8 @@ for i in range(h):
         b = int((1. - math.exp(-sens * val * color[2])) * 255)
         im[i, j, :] = r, g, b
 
+plt.imsave('aizawa.png', im, dpi=600, origin='lower')
+
 plt.axis('off')
-
 plt.imshow(im)
-
-plt.savefig('aizawa.png', dpi=600.)
-
 plt.show()

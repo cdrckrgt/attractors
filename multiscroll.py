@@ -18,21 +18,21 @@ def nscroll(x, y, z, alpha=9., beta=14.286, gamma=0):
     return x_prime, y_prime, z_prime
 
 # how many steps we propagate
-nb_iters = int(1e7)
+nb_iters = int(1e8)
 nb_particles = int(1e4)
 dt = 0.01
 
 # rather than draw the attractor directly, let's
 # instead use a histogram to determine where we
 # spend most of our time
-h, w = 1600, 1600
+h, w = 2400, 3200
 hist = np.zeros((h, w), dtype=int)
 
 x_min = -35
 x_max = 35
 
-y_min = x_min * (h / w) - 10
-y_max = x_max * (h / w) + 10
+y_min = x_min * (h / w) + 20
+y_max = x_max * (h / w) - 20
 
 print('x_min: ', x_min)
 print('x_max: ', x_max)
@@ -41,7 +41,7 @@ print('y_max: ', y_max)
 
 for i in range(nb_iters):
     if i % nb_particles == 0:
-        x, y, z = np.random.randn() * 10, np.random.randn() * 10, np.random.randn() * 10
+        x, y, z = np.random.randn() * 15, np.random.randn() * 15, np.random.randn() * 15
     x_prime, y_prime, z_prime = nscroll(x, y, z)
 
     x += x_prime * dt
@@ -54,14 +54,14 @@ for i in range(nb_iters):
 
     x_i = int( (x - x_min) * w / (x_max - x_min) )
     # we are only plotting the x and z axes here
-    y_i = int( (z - y_min) * h / (y_max - y_min) )
+    y_i = int( (y - y_min) * h / (y_max - y_min) )
     if (x_i >= 0 and x_i < w \
         and y_i >= 0 and y_i < h):
         # remember that matrix is row by columns
         hist[y_i, x_i] += 1
 
 im = np.zeros((h, w, 3), dtype=int)
-sens = 5e-4
+sens = 4e-4
 color = (36, 169, 174)
 for i in range(h):
     for j in range(w):
@@ -71,10 +71,8 @@ for i in range(h):
         b = int((1. - math.exp(-sens * val * color[2])) * 255)
         im[i, j, :] = r, g, b
 
+plt.imsave('{}-doublescroll.png'.format(n), im, dpi=600, origin='lower')
+
 plt.axis('off')
-
 plt.imshow(im)
-
-plt.savefig('{}-doublescroll.png'.format(n), dpi=600.)
-
 plt.show()

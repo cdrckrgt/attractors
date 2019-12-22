@@ -10,12 +10,12 @@ def peter(x, y, a=-0.709, b=1.638, c=0.452, d=1.74):
     return x_prime, y_prime
 
 # how many steps we propagate
-nb_iters = int(1e7)
+nb_iters = int(5e7)
 
 # rather than draw the attractor directly, let's
 # instead use a histogram to determine where we
 # spend most of our time
-h, w = 1600, 2000
+h, w = 2000, 2500
 hist = np.zeros((h, w), dtype=int)
 
 x_min = -1.5
@@ -42,7 +42,7 @@ for _ in range(nb_iters):
         hist[y_i, x_i] += 1
 
 im = np.zeros((h, w, 3), dtype=int)
-sens = 3e-4
+sens = 1e-4
 color = (36, 169, 174)
 for i in range(h):
     for j in range(w):
@@ -52,10 +52,9 @@ for i in range(h):
         b = int((1. - math.exp(-sens * val * color[2])) * 255)
         im[i, j, :] = r, g, b
 
+
+plt.imsave('peterdejong.png', im, dpi=600, origin='lower')
+
 plt.axis('off')
-
 plt.imshow(im)
-
-plt.savefig('peterdejong.png', dpi=600.)
-
 plt.show()

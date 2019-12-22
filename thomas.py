@@ -46,7 +46,7 @@ for i in range(nb_iters):
     z += z_prime * dt
 
     # allow particles to settle
-    if nb_iters < int(5e1):
+    if nb_iters < int(5e2):
         continue
 
     x_i = int( (x - x_min) * w / (x_max - x_min) )
@@ -58,7 +58,7 @@ for i in range(nb_iters):
         hist[y_i, x_i] += 1
 
 im = np.zeros((h, w, 3), dtype=int)
-sens = 2.5e-4
+sens = 4e-4
 color = (36, 169, 174)
 for i in range(h):
     for j in range(w):
@@ -68,10 +68,8 @@ for i in range(h):
         b = int((1. - math.exp(-sens * val * color[2])) * 255)
         im[i, j, :] = r, g, b
 
+plt.imsave('thomas.png', im, dpi=600, origin='lower')
+
 plt.axis('off')
-
 plt.imshow(im)
-
-plt.savefig('thomas.png', dpi=600.)
-
 plt.show()
